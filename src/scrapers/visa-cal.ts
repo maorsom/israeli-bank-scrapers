@@ -5,7 +5,7 @@ import {
   clickButton, elementPresentOnPage, pageEval, waitUntilElementFound,
 } from '../helpers/elements-interactions';
 import { fetchPostWithinPage } from '../helpers/fetch';
-import { getCurrentUrl } from '../helpers/navigation';
+import { getCurrentUrl, waitForNavigation } from '../helpers/navigation';
 import { getFromSessionStorage } from '../helpers/storage';
 import { filterOldTransactions } from '../helpers/transactions';
 import { waitUntil } from '../helpers/waiting';
@@ -362,9 +362,15 @@ class VisaCalScraper extends BaseScraperWithBrowser<ScraperSpecificCredentials> 
       preAction: this.openLoginPopup,
       postAction: async () => {
         try {
-          await waitUntilElementFound(this.page, 'button.btn-next-time');
+
+          await Promise.race([
+            waitForNavigation(this.page),
+            waitUntilElementFound(this.page, 'button.btn-next-time')
+          ]);
+
           const currentUrl = await getCurrentUrl(this.page);
           if (currentUrl.endsWith('site-tutorial')) {
+            console.log('site tutorial')
             await clickButton(this.page, 'button.btn-close');
           }
         } catch (e) {
@@ -380,6 +386,7 @@ class VisaCalScraper extends BaseScraperWithBrowser<ScraperSpecificCredentials> 
   }
 
   async fetchData(): Promise<ScraperScrapingResult> {
+    console.log('fetch data started');
     const defaultStartMoment = moment().subtract(1, 'years').subtract(6, 'months').add(1, 'day');
     const startDate = this.options.startDate || defaultStartMoment.toDate();
     const startMoment = moment.max(defaultStartMoment, moment(startDate));

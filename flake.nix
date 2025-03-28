@@ -15,7 +15,7 @@
           version = chromiumRevision;
           src = pkgs.fetchzip {
             url = "https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/${chromiumRevision}/chrome-linux.zip";
-            sha256 = "0fd3sqnx7z7vpmrmlxwid7qhdrpxhajcxv32hiqxk4v2wx1sbnxj";
+            sha256 = "1jlzjqx5ad79w5vcz8g3lfd1vjxrwarbg0ayshqk3nad49cb6fz9";
           };  
 
           dontBuild = true;
@@ -81,6 +81,7 @@
 
           buildInputs=[
             pkgs.nodePackages.nodejs
+            pkgs.tmux
             pkgs.nodePackages.npm
             pkgs.nodePackages.typescript
             fhsChromium

@@ -10,6 +10,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "clean": "rimraf lib",
+    "test-dbg": "cross-env BABEL_ENV=test node --inspect-brk node_modules/jest/bin/jest.js --runInBand",
     "test": "cross-env BABEL_ENV=test jest",
     "test:ci": "ncp src/tests/.tests-config.tpl.js src/tests/.tests-config.js && npm run test",
     "lint": "eslint src --ext .ts",
